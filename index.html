@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manuel & Leonor - A Nossa História de Amor</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+         /* ============================================
+           TELA DE PROTEÇÃO POR SENHA
+           ============================================ */
+        
+        .password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0000 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease;
+        }
+
+        .password-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .password-box {
+            background: rgba(20, 20, 20, 0.95);
+            padding: 50px 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(229, 9, 20, 0.3);
+            border: 2px solid rgba(229, 9, 20, 0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            animation: fadeInScale 0.5s ease;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .password-box .lock-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 25px;
+            background: linear-gradient(135deg, #e50914 0%, #b20710 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .password-box h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .password-box p {
+            color: var(--gray-text);
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+
+        .password-input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .password-input:focus {
+            border-color: var(--primary-red);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .password-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .password-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #e50914 0%, #b20710 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(229, 9, 20, 0.4);
+        }
+
+        .password-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(229, 9, 20, 0.6);
+        }
+
+        .password-submit:active {
+            transform: translateY(0);
+        }
+
+        .password-error {
+            color: #ff4444;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            display: none;
+            animation: shake 0.5s;
+        }
+
+        .password-error.show {
+            display: block;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+    </style>
+</head>
+<body>
+    <!-- TELA DE PROTEÇÃO POR SENHA -->
+<div class="password-overlay" id="passwordOverlay">
+    <div class="password-box">
+        <div class="lock-icon">🔒</div>
+        <h2>Privado</h2>
+        <p>O nosso dia <br>Insere a palavra-passe para continuar</p>
+
+        <form id="passwordForm" onsubmit="return false;">
+            <div class="password-input-group">
+                <input 
+                    type="password" 
+                    id="passwordInput" 
+                    class="password-input" 
+                    placeholder="Palavra-passe..."
+                    autocomplete="off"
+                    required
+                >
+            </div>
+            <button type="submit" class="password-submit">Entrar</button>
+            <p class="password-error" id="passwordError">❌ Palavra-passe incorreta!</p>
+        </form>
+    </div>
+</div>
+
+    <!-- Netflix Style Intro -->
+    <div id="intro" class="intro-screen">
+        <div class="intro-content">
+            <div class="heart-logo">
+                <svg viewBox="0 0 100 100" class="heart-svg">
+                    <path d="M50,90 C50,90 10,60 10,35 C10,20 20,10 32.5,10 C40,10 45,15 50,22.5 C55,15 60,10 67.5,10 C80,10 90,20 90,35 C90,60 50,90 50,90 Z" fill="#e50914"/>
+                </svg>
+            </div>
+            <h1 class="intro-title">M & L</h1>
+            <div class="intro-subtitle">A Nossa História de Amor</div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">M & L</div>
+            <button class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="nav-link active">Início</a></li>
+                <li><a href="#timeline" class="nav-link">A Nossa História</a></li>
+                <li><a href="#seasons" class="nav-link">Temporadas</a></li>
+                <li><a href="#gallery" class="nav-link">Momentos</a></li>
+                <li><a href="#reasons" class="nav-link">Por Que Eu Amo Te</a></li>
+                <li><a href="#counter" class="nav-link">Nosso Tempo</a></li>
+                <li><a href="#message" class="nav-link">Mensagem</a></li>
+                <li><a href="#episodes" class="nav-link">Episódios</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Manuel & Leonor</h1>
+            <p class="hero-subtitle">Desde 16 de Novembro de 2024</p>
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="scrollToSection('timeline')">
+                    <span>▶</span> A Nossa História
+                </button>
+                <button class="btn-secondary" onclick="scrollToSection('reasons')">
+                    <span>💖</span> Por Que Eu Amo Te
+                </button>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section id="timeline" class="timeline-section">
+        <div class="container">
+            <h2 class="section-title">A Nossa História</h2>
+            <div class="timeline">
+                <div class="timeline-item" data-aos="fade-right">
+                    <div class="timeline-date">16 de Novembro de 2024</div>
+                    <div class="timeline-content">
+                        <h3>O Início de Tudo</h3>
+                        <p>O dia em que tudo voltou a ter vida. O dia em que percebi que tinha que perder o medo para pedir te em namoro (talvez também perder um pouco da vergonha).</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item" data-aos="fade-left">
+                    <div class="timeline-date">7 de Dezembro de 2024</div>
+                    <div class="timeline-content">
+                        <h3>O Nosso primeiro momento sozinho como Namorados</h3>
+                        <p>Não sei se a senhora lembra se, mas este foi o nosso primeiro dia jutnos como casal e por acaso, estoua usar a mesma camisola agora, sima mesma camisola daquele dia a do braga. Foi um dia muito bom como todos, repletos de beijinhos e amor, que este vem aumentando ao longo do tempo por ti.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item" data-aos="fade-right">
+                    <div class="timeline-date">19 de Dezembro de 2024</div>
+                    <div class="timeline-content">
+                        <h3>A Nossa Foto de Natal</h3>
+                        <p>Foi o dia em que tiramos a foto na arvore de natal, o dia que também tiramos a foto na coisa das meias, foi o dia que tu diceste q o nosso beijo foi bom, ainda me lembro disso sim porque foi fofo e incrivel apenas. Tem também a nossa foto no urso, que por vezes não sou eu o urso.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item" data-aos="fade-left">
+                    <div class="timeline-date">15 de Fevereiro de 2025</div>
+                    <div class="timeline-content">
+                        <h3>Sapatilhas</h3>
+                        <p>Eu lembro me deste dia porque ficaste feliz que te dei um beijo em frente aquela atende que não gostaste nada assim dizendo, e por não arranjar o meu numero de sapatilhas infelizmente né.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item" data-aos="fade-right">
+                    <div class="timeline-date">10 de Abril de 2025</div>
+                    <div class="timeline-content">
+                        <h3>Presente</h3>
+                        <p>Lembro me que tavas feliz, porque finalmente dei te um presente decente, um presente minimamente bom. que foi o colar da pandora, eu acho que gostaste ams ainda não tenho a certeza. </br> Também foi o último dia que tivemos juntos antes de eu ir para a grécia então também me lembro por isso, euuu amooo teee mesmooo muitooo meuuu amorrr.</p>
+                    </div>
+
+                </div>
+
+                                <div class="timeline-item" data-aos="fade-left">
+                    <div class="timeline-date">5 de Julho de 2025</div>
+                    <div class="timeline-content">
+                        <h3>Primeiro Dia</h3>
+                        <p>Foi o primeiro dia que tivemos juntos depois de eu voltar da grécia, fui supreendido por um presente da minha namorada. O presente foi incrivel e ainda é porque eu uso para decorar o meu quarto, lembro que tivemos a monta-lo e depois disso não o desmontei porque foi o nosso momneto juntos.</p>
+                    </div>
+
+                </div>
+
+                                <div class="timeline-item" data-aos="fade-left">
+                    <div class="timeline-date">12 de Julho de 2025</div>
+                    <div class="timeline-content">
+                        <h3>Primeiro Dia Deitados</h3>
+                        <p>Sim amor foi neste dia que foi o nosso primeiro que nos deitamos, pelo menos na relva foi, e lembro que foi o nosso primeiro beijo de lingua sim, além que tavamos muito felizes e foi aí que começou o nosso pão de queijo também, eu amo esse dia porque tavamos felizes só a conversar e tava incrível, obrigado por estes dias amor.</p>
+                    </div>
+
+                </div>
+
+                                <div class="timeline-item" data-aos="fade-left">
+                    <div class="timeline-date">20 de Agosto de 2025</div>
+                    <div class="timeline-content">
+                        <h3>Triste</h3>
+                        <p>Não preciso falar muito sobre este dia, mas eu amei, foi o meu melhor aniversário, não sei como ams tu melhoras tudo, LITERALMENTE TUDO.</p>
+                    </div>
+                </div>
+
+                                                <div class="timeline-item" data-aos="fade-left">
+                    <div class="timeline-date">5 de Setembro de 2025</div>
+                    <div class="timeline-content">
+                        <h3>Noite Branca</h3>
+                        <p>Não sabes o quanto amei este dia, esta noite eu amei tudo, foi o dia em que os teus pais vieram me trazer a casa mas para além disso, não tenho palavras par este dia meu deus, tu sabes como foi neee, até porque estavas comigo.</p>
+                    </div>
+                </div>
+
+                                                                <div class="timeline-item" data-aos="fade-left">
+                    <div class="timeline-date">31 de Janeiro de 2026</div>
+                    <div class="timeline-content">
+                        <h3>Estudar</h3>
+                        <p>Foi o primeiro dia que estudamos juntos, wow estou admirado, amei quando escreveste na minha mão, só não gostei que apagaste, mas este dia foi incrivel, como todos que tivemos juntos amor.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Netflix Seasons Section -->
+    <section id="seasons" class="seasons-section">
+        <div class="container">
+            <h2 class="section-title">As Temporadas do Nosso Amor</h2>
+            <div class="seasons-grid">
+                <div class="season-card" data-aos="zoom-in">
+                    <div class="season-number">Temporada 1</div>
+                    <h3>O Começo</h3>
+                    <p>Onde tudo começou. Os primeiros olhares, as primeiras conversas, os primeiros sentimentos.</p>
+                    <div class="season-episodes">
+                        <div class="episode">Ep. 1: A Mensagem</div>
+                        <div class="episode">Ep. 2: Quando Começou?</div>
+                        <div class="episode">Ep. 3: Quando Percebi Que Eras Especial</div>
+                    </div>
+                </div>
+
+                <div class="season-card" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="season-number">Temporada 2</div>
+                    <h3>Momentos Inesquecíveis</h3>
+                    <p>As aventuras, os risos, os momentos que ficaram guardados para sempre no meu coração.</p>
+                    <div class="season-episodes">
+                        <div class="episode">Ep. 1: Os Dias Aconchegados</div>
+                        <div class="episode">Ep. 2: O Melhor Aniversário</div>
+                        <div class="episode">Ep. 3: O Presente</div>
+                        <div class="episode">Ep. 4: A Noite Branca</div>
+                    </div>
+                </div>
+
+                <div class="season-card" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="season-number">Temporada 3</div>
+                    <h3>Nosso Futuro</h3>
+                    <p>Os episódios ainda por escrever. As aventuras que vamos viver juntos.</p>
+                    <div class="season-episodes">
+                        <div class="episode">Ep. 1: A Ida ao Gêres</div>
+                        <div class="episode">Ep. 2: O Pedido</div>
+                        <div class="episode">Ep. 3: Finlândia</div>
+                        <div class="episode coming-soon">Para Sempre...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reasons Section -->
+    <section id="reasons" class="reasons-section">
+        <div class="container">
+            <h2 class="section-title">Por Que Eu Amo Te</h2>
+            <div class="reasons-intro">
+                <p>Leonor, são tantas razões que seria impossível listar todas. Mas aqui estão algumas das mais especiais...</p>
+            </div>
+            <div class="reasons-grid">
+                <div class="reason-card" data-aos="flip-left">
+                    <div class="reason-number">01</div>
+                    <h3>O Teu Sorriso</h3>
+                    <p>Iluminas os meus dias e fazes qualquer problema parecer pequeno.</p>
+                </div>
+
+                <div class="reason-card" data-aos="flip-left" data-aos-delay="100">
+                    <div class="reason-number">02</div>
+                    <h3>Como Me Fazes Sentir</h3>
+                    <p>Quando estou contigo, sinto que estou em casa. És o meu lugar seguro. Sinto me tão bem que tenho medo, de estragar o nosso momento.</p>
+                </div>
+
+                <div class="reason-card" data-aos="flip-left" data-aos-delay="200">
+                    <div class="reason-number">03</div>
+                    <h3>A Tua Presença</h3>
+                    <p>Os momentos mais simples contigo são os mais perfeitos. Não preciso de mais nada. Só de ti lá para ser incrível.</p>
+                </div>
+
+                <div class="reason-card" data-aos="flip-left" data-aos-delay="300">
+                    <div class="reason-number">04</div>
+                    <h3>Os Nossos Momentos Aconchegados</h3>
+                    <p>Ficar juntinhos, agarradinhos, sem fazer nada de especial. Isso é tudo. É tudo para mim, é incrivel apesar de tudo ser incrível em ti.</p>
+                </div>
+
+                <div class="reason-card" data-aos="flip-left" data-aos-delay="400">
+                    <div class="reason-number">05</div>
+                    <h3>Como Entendes Me</h3>
+                    <p>Conheces-me como ninguém. Sabes quando estou bem, quando estou mal, sem eu ter que dizer.</p>
+                </div>
+
+                <div class="reason-card" data-aos="flip-left" data-aos-delay="500">
+                    <div class="reason-number">06</div>
+                    <h3>As Nossas Aventuras</h3>
+                    <p>Ainda não temos muitas mas as que temos são momentos incríveis, contigo cada uma das aventuras são especiais.</p>
+                </div>
+
+                <div class="reason-card" data-aos="flip-left" data-aos-delay="600">
+                    <div class="reason-number">07</div>
+                    <h3>O Teu Carinho</h3>
+                    <p>A forma como me tratas, como cuidas de mim, como me fazes sentir amado.</p>
+                </div>
+
+                <div class="reason-card" data-aos="flip-left" data-aos-delay="700">
+                    <div class="reason-number">08</div>
+                    <h3>És Tu</h3>
+                    <p>Simplesmente porque és tu. A Leonor Cardoso Morgado que roubou me o coração.</p>
+                </div>
+
+                <div class="reason-card" data-aos="flip-left" data-aos-delay="800">
+                    <div class="reason-number">09</div>
+                    <h3>O Nosso Futuro</h3>
+                    <p>Amo-te porque quero viver todas as aventuras da vida ao teu lado. Tu consegues fazer me imaginar o futuro contigo amor.</p>
+                </div>
+
+                <div class="reason-card reason-card-special" data-aos="flip-left" data-aos-delay="900">
+                    <div class="reason-number">10</div>
+                    <h3>Porque És Tu o Meu Mundo</h3>
+                    <p>És a pessoa que eu escolho todos os dias. És o amor da minha vida. És tudo para mim. E és o amor para a minha vida.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Counter Section -->
+    <section id="counter" class="counter-section">
+        <div class="container">
+            <h2 class="section-title">O Nosso Tempo Juntos</h2>
+            <p class="counter-subtitle">Desde 16 de Novembro de 2024</p>
+            
+            <!-- Milestone Banner -->
+            <div id="milestone-banner" class="milestone-banner" style="display: none;">
+                <div class="milestone-content">
+                    <span class="milestone-icon">🎉</span>
+                    <span class="milestone-text" id="milestone-text"></span>
+                    <span class="milestone-icon">🎉</span>
+                </div>
+            </div>
+            
+            <!-- Main Counter Grid -->
+            <div class="counter-grid">
+                <div class="counter-item" data-aos="zoom-in">
+                    <div class="counter-value" id="months">0</div>
+                    <div class="counter-label">Meses</div>
+                </div>
+                <div class="counter-item" data-aos="zoom-in" data-aos-delay="50">
+                    <div class="counter-value" id="weeks">0</div>
+                    <div class="counter-label">Semanas</div>
+                </div>
+                <div class="counter-item" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="counter-value" id="days">0</div>
+                    <div class="counter-label">Dias</div>
+                </div>
+                <div class="counter-item" data-aos="zoom-in" data-aos-delay="150">
+                    <div class="counter-value" id="hours">0</div>
+                    <div class="counter-label">Horas</div>
+                </div>
+                <div class="counter-item" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="counter-value" id="minutes">0</div>
+                    <div class="counter-label">Minutos</div>
+                </div>
+                <div class="counter-item" data-aos="zoom-in" data-aos-delay="250">
+                    <div class="counter-value" id="seconds">0</div>
+                    <div class="counter-label">Segundos</div>
+                </div>
+            </div>
+            
+            <!-- Special Stats -->
+            <div class="special-stats">
+                <div class="stat-card" data-aos="fade-up">
+                    <div class="stat-icon">⏰</div>
+                    <div class="stat-value" id="totalHours">0</div>
+                    <div class="stat-label">Horas Totais Juntos</div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-icon">💓</div>
+                    <div class="stat-value" id="heartbeats">0</div>
+                    <div class="stat-label">Batimentos Cardíacos (Aproximados)</div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-icon">😊</div>
+                    <div class="stat-value" id="smiles">∞</div>
+                    <div class="stat-label">Sorrisos Provocados</div>
+                </div>
+            </div>
+            
+            <p class="counter-message">E cada segundo é mais especial que o anterior ❤️</p>
+        </div>
+    </section>
+
+    <!-- Final Message Section -->
+    <section id="message" class="message-section">
+        <div class="container">
+            <div class="message-content" data-aos="fade-up">
+                <h2 class="message-title">Para a Leonor</h2>
+                <div class="message-text">
+                    <p>Leonor Cardoso Morgado,</p>
+                    
+                    <p>Desde o dia 16 de Novembro de 2024, a minha vida ganhou um novo sentido. És tu. És o meu lugar seguro, a minha paz, a minha alegria.</p>
+                    
+                    <p>Amo os nossos dias aconchegados em tua casa, quando não precisamos de fazer nada de especial porque estar contigo já é especial. Amo como me fazes sentir amado, protegido, completo.</p>
+                    
+                    <p>O meu aniversário foi o melhor da minha vida, não pelos presentes ou pela festa, mas porque estava contigo. Mesmo quando perdeste a pulseira e ficaste mal.</p>
+                    
+                    <p>E sim, eu vou te amar sempre e quero sempre viver todas as aventuras que a vida tem para nos dar. Quero os dias simples e os dias extraordinários. Quero tudo, desde que seja contigo.</p>
+                    
+                    <p>És a pessoa que eu escolho. Hoje, amanhã e sempre.</p>
+                    
+                    <p>Amo-te mais do que as palavras podem expressar.</p>
+                    
+                    <p class="message-signature">Para sempre teu,<br>Manuel ❤️</p>
+                </div>
+                
+                <div class="final-heart">
+                    <svg viewBox="0 0 100 100" class="beating-heart">
+                        <path d="M50,90 C50,90 10,60 10,35 C10,20 20,10 32.5,10 C40,10 45,15 50,22.5 C55,15 60,10 67.5,10 C80,10 90,20 90,35 C90,60 50,90 50,90 Z" fill="#e50914"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EPISODES PATH SECTION -->
+<section id="episodes" class="episodes-path-section">
+    <div class="container">
+        
+        <h2 class="section-title">Caminho dos Episódios</h2>
+        
+        <p class="episodes-path-intro">
+            Desculpa, não funcionava em cima a expansão…  
+            mas tens aqui todos os episódios organizados ❤️
+        </p>
+
+        <div class="episodes-path-grid">
+
+            <!-- TEMPORADA 1 -->
+            <div class="episodes-season">
+                <h3>Temporada 1 - O Começo</h3>
+                <a href="temp1ep1.html" class="episode-link">Ep. 1 – A Mensagem</a>
+                <a href="temp1ep1.html" class="episode-link">Ep. 2 – Quando Começou?</a>
+                <a href="temp1ep1.html" class="episode-link">Ep. 3 – Quando Percebi Que Eras Especial</a>
+            </div>
+
+            <!-- TEMPORADA 2 -->
+            <div class="episodes-season">
+                <h3>Temporada 2 - Momentos Inesquecíveis</h3>
+                <a href="temp2ep1.html" class="episode-link">Ep. 1 – Os Dias Aconchegados</a>
+                <a href="temp2ep2.html" class="episode-link">Ep. 2 – O Melhor Aniversário</a>
+                <a href="temp2ep3.html" class="episode-link">Ep. 3 – O Presente</a>
+                <a href="temp2ep4.html" class="episode-link">Ep. 4 – A Noite Branca</a>
+            </div>
+
+            <!-- TEMPORADA 3 -->
+            <div class="episodes-season">
+                <h3>Temporada 3 - Nosso Futuro</h3>
+                <a href="temp3ep1.html" class="episode-link">Ep. 1 – A Ida ao Gêres</a>
+                <a href="temp3ep2.html" class="episode-link">Ep. 2 – O Pedido</a>
+                <a href="temp3ep3.html" class="episode-link">Ep. 3 – Finlândia</a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+    <!-- Audio Player (Hidden) -->
+    <audio id="backgroundMusic" loop>
+        <source src="musica.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Music Control Button -->
+    <button class="music-control" id="musicControl" title="Tocar música">
+        <svg class="music-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M9 18V5l12-2v13M9 18c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3zm12-2c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3z"/>
+        </svg>
+    </button>
+
+    <script src="script.js"></script>
+    <script>
+// ============================================
+// PROTEÇÃO POR SENHA
+// ============================================
+
+const correctPassword = "1611"; // MUDA AQUI A PALAVRA-PASSE QUE QUISERES
+const passwordForm = document.getElementById('passwordForm');
+const passwordInput = document.getElementById('passwordInput');
+const passwordError = document.getElementById('passwordError');
+const passwordOverlay = document.getElementById('passwordOverlay');
+
+passwordForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const enteredPassword = passwordInput.value;
+    
+    if (enteredPassword === correctPassword) {
+        // Senha correta - esconder overlay
+        passwordOverlay.classList.add('hidden');
+        passwordError.classList.remove('show');
+        
+        // Remover completamente após a animação
+        setTimeout(() => {
+            passwordOverlay.style.display = 'none';
+        }, 500);
+    } else {
+        // Senha incorreta - mostrar erro
+        passwordError.classList.add('show');
+        passwordInput.value = '';
+        passwordInput.focus();
+        
+        // Esconder erro depois de 3 segundos
+        setTimeout(() => {
+            passwordError.classList.remove('show');
+        }, 3000);
+    }
+});
+
+</script>
+</body>
+</html>
